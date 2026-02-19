@@ -6,8 +6,19 @@
 // with an error.
 
 function rejectAfter(ms, callback) {
-
+    let promise = new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            let err={};
+            err.message=`Rejected after ${ms}ms`
+            reject(err);
+        },ms)
+    })
+    return promise.then(()=>callback(null,data)).catch((err)=>callback(err,null))
 }
+
+ rejectAfter(100, (err, result) => {
+    console.log(err)
+ })
 
 module.exports = rejectAfter;
 
