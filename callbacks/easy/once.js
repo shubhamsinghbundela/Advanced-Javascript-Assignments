@@ -15,7 +15,6 @@ function once(fn) {
     const callback = args.pop();
 
     if (called) {
-      // Return cached result
       return callback(error, result);
     }
 
