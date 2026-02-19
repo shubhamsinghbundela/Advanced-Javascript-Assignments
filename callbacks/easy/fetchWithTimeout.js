@@ -10,7 +10,21 @@
 
 
 function fetchWithTimeout(url, ms, callback) {
-
+    let output = new Promise((resolve, reject)=>{
+        setTimeout(() => {
+           let err = {};
+           err.message="Request Timed Out"
+           reject(err);
+        }, ms);
+        fetch(url, (err,data)=>{
+            if(err){
+                reject(err);
+            }else{
+                resolve(data);
+            }
+        })
+    })
+    return output.then((data)=>callback(null,data)).catch((err)=>callback(err))
 }
 
 module.exports = fetchWithTimeout;
