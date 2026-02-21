@@ -5,8 +5,6 @@
 // if the first attempt rejects.
 // If the second attempt also rejects, the error should be propagated.
 
-
-//given a function `fn` that returns a Promise. (It means this fn is callback-based asynchronous function)
 //  let calls = 0;
 
 //     const fn = (cb) => {
