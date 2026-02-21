@@ -5,7 +5,7 @@
 // The function should wait for the specified time and then invoke the callback.
 
 function sleep(millis, callback) {
-
+    return new Promise(resolve => setTimeout(resolve, millis)).then(callback);
 }
 
 module.exports = sleep;
