@@ -57,7 +57,7 @@ function batchProcess(items, limit, worker, onComplete) {
         active--;
         completed++;
 
-        next(); // Start next task when one finishes
+        next() // Start next task when one finishes
       });
     }
   }
