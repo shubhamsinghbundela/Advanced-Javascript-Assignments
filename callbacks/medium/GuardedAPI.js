@@ -9,13 +9,27 @@
 // The initialization task and API functions must invoke callbacks when
 // they complete.
 class GuardedAPI {
-  constructor() {}
+  constructor() {
+    this.queue = [];
+  }
 
-  init(initTask) {}
+  init(initTask) {
+    this.initTask = initTask;
+  }
 
-  call(apiFn, onComplete) {}
+  call(apiFn, onComplete) {
+    this.queue.push({apiFn, onComplete});
+    this.initTask((err, data)=>{
+      this._flush();
+    })
+  }
 
-  _flush() {}
+  _flush() {
+     const {apiFn, onComplete} = this.queue.shift();
+     apiFn((err, data)=>{
+      onComplete(err, data)
+     })
+  }
 }
 
 module.exports = GuardedAPI;
