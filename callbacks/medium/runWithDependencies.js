@@ -12,13 +12,24 @@
 // if any task fails.
 
 function runWithDependencies(tasks, finalCallback) {
+  // tasks: set of asynchronous tasks where some tasks depend on the completion of others.
+  //const tasks = [
+  //   { id: "A", deps: ["B"], run: (cb) => setTimeout(() => cb(null, "ResultA"), 10) },
+  //   { id: "B", deps: [],    run: (cb) => setTimeout(() => cb(null, "ResultB"), 50) }
+  // ];
+
+  //goal is to execute each task only after all of its dependencies have been successfully completed.
+  // Here dependency is something that must be completed before another task
   let queue = [];
   for (let i = 0; i < tasks.length; i++) {
+    // If dependency is there for any task
     if(tasks[i].deps.length>0){
+        // add all dependencies in queue
         tasks[i].deps.forEach(element => {
              let findTask = tasks.find(e => e.id == element);
              queue.push(findTask)
         });
+        // after adding all dependencies in queue then execute task
         queue.push(tasks[i])
     }else{
       queue.push(tasks[i])
@@ -30,6 +41,7 @@ function runWithDependencies(tasks, finalCallback) {
 
   for (let i = 0; i < queue.length; i++) {
     const element = queue[i];
+    // Each task is asynchronous and must invoke a callback when finished.
     queue[i].run((err, data)=>{
       if(err){
         err=true;
@@ -37,6 +49,7 @@ function runWithDependencies(tasks, finalCallback) {
         // arr.push({[element.id]: data})
         obj[element.id] = data
       }
+    //  Invoke finalCallback after all tasks have completed
       if(i==queue.length-1){
         finalCallback(err, obj)
       }
