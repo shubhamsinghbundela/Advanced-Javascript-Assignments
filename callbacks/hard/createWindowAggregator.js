@@ -19,6 +19,7 @@ function createWindowAggregator(windowSize, onWindowReady) {
   let l=0, r=windowSize-1;
   return function(...args){
      //On each new value, compute and emit the current average.
+     //receiving a stream of numeric values asynchronously
      arr.push(...args);
      //Before N values are received, compute the average
      if(arr.length<windowSize){
