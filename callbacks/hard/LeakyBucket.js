@@ -21,7 +21,6 @@ class LeakyBucket {
 
   add(task, onComplete) {
     // If the bucket is full, new tasks must be rejected immediately
-    // Lets fill bucket until buket full
     if(this.bucket.length===this.capacity){
       task((err,data)=>{
         err={}
@@ -29,8 +28,10 @@ class LeakyBucket {
         onComplete(err);
       })
     }
+    // Lets fill bucket until buket full
     if(this.bucket.length<this.capacity){
       this.bucket.push({task, onComplete})
+      //Tasks are processed at a fixed interval (leak rate)
       if (!this.timer) {
         this.timer = setInterval(() => this._process(), this.leakRateMs);
       }
@@ -48,9 +49,6 @@ class LeakyBucket {
     console.log(task);
     task((err, data)=>{
        onComplete(err, data);
-       if(this.bucket.length==0){
-        clearInterval(this._process)
-       }
     })
   }
 }
