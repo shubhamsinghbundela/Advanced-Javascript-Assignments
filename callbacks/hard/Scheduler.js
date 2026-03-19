@@ -11,11 +11,45 @@
 // by yielding execution voluntarily.
 
 class Scheduler {
-  constructor() {}
+  constructor() {
+    this.queue = [];
+    this.timer = null;
+    this.running = false;
+  }
 
-  schedule(task, priority = 0) {}
+  schedule(task, priority = 0) {
+    this.queue.push({ task, priority });
 
-  run(onAllFinished) {}
+    // always maintain priority order
+    this.queue.sort((a, b) => b.priority - a.priority);
+
+    // start scheduler only if not already running
+    if (!this.running) {
+      this.running = true;
+      this.timer = setTimeout(() => this.run(), 0);
+    }
+  }
+
+  run(onAllFinished) {
+    if (this.queue.length === 0) {
+      this.running = false;
+      this.timer = null;
+      return onAllFinished && onAllFinished(null);
+    }
+
+    const { task } = this.queue.shift();
+
+    task((err) => {
+      if (err) {
+        this.running = false;
+        this.timer = null;
+        return onAllFinished && onAllFinished(err);
+      }
+
+      // schedule next task (instead of loop or interval)
+      this.timer = setTimeout(() => this.run(onAllFinished), 0);
+    });
+  }
 }
 
 module.exports = Scheduler;
