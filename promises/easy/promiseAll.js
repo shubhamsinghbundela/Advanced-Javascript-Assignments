@@ -3,6 +3,24 @@
 // You are required to implement your own version of Promise.all without using the built-in method. 
 // The function should accept an array of values that may include Promises or plain constants. 
 // It must resolve with an array of results in the same order once all inputs resolve, or reject immediately if any input rejects.
-function promiseAll(promises) {}
+function promiseAll(promises) {
+    return new Promise((resolve, reject)=>{
+        let arr = [];
+        let completed = 0;
+        promises.forEach((element, index) => {
+            Promise.resolve(element)
+            .then((data)=>{
+                arr[index]=data;
+                completed++;
+                if(completed === promises.length){
+                    resolve(arr);
+                }
+            }).catch(reject);
+        });
+        if(promises.length===0){
+            resolve([]);
+        }
+    })
+}
 
 module.exports = promiseAll;
