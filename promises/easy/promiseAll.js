@@ -7,6 +7,9 @@ function promiseAll(promises) {
     return new Promise((resolve, reject)=>{
         let arr = [];
         let completed = 0;
+        if(promises.length===0){
+            resolve([]);
+        }
         promises.forEach((element, index) => {
             Promise.resolve(element)
             .then((data)=>{
@@ -17,9 +20,6 @@ function promiseAll(promises) {
                 }
             }).catch(reject);
         });
-        if(promises.length===0){
-            resolve([]);
-        }
     })
 }
 
